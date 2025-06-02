@@ -1,29 +1,19 @@
 #include <iostream>
 
-#include <boost/program_options.hpp>
+#include <cxxopts.hpp>
 
 #include "application.h"
 
+//-----------------------------------------------------------------------------
 int main(int argc, char* argv[]) {
 
-    boost::program_options::options_description desc("Game options");
+    cxxopts::Options options(argv[0], "Conways game");
+    options.add_options()
+            ("w,width", "Window width", cxxopts::value<int>()->default_value("800"))
+            ("h,height", "Window height", cxxopts::value<int>()->default_value("800"))
+            ("g,grid", "Grid size", cxxopts::value<int>()->default_value("40"));
 
-    desc.add_options()
-            ("help,h", "Вывести справку")
-            ("input,i", boost::program_options::value<std::string>(), "Входной файл")
-            ("output,o", boost::program_options::value<std::string>(), "Выходной файл")
-            ("verbosity,v", boost::program_options::value<int>()->default_value(1), "Уровень подробности, от 0 до 2");
-
-    boost::program_options::variables_map vm;
-    boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
-    boost::program_options::notify(vm);
-
-    // Обработка параметров
-    if (vm.count("help")) {
-        std::cout << "input wh and w" << std::endl;
-        return 0;
-    }
-
-    Application game;
+    const auto result = options.parse(argc, argv);
+    Application game(result["height"].as<int>(), result["width"].as<int>(), result["grid"].as<int>());
     return game.run();
 }

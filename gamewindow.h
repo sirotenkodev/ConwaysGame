@@ -9,7 +9,7 @@
 class GameWindow
 {
 public:
-    GameWindow(const std::string& title);
+    GameWindow(const std::string& title, int windowWidth, int windowHeight);
     ~GameWindow();
 
     SDL_Window* getWindow() const;

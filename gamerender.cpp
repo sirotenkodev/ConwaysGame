@@ -1,6 +1,6 @@
 #include "gamerender.h"
 
-
+//-----------------------------------------------------------------------------
 GameRender::GameRender(GameWindow &window)
 {
     renderer = SDL_CreateRenderer(window.getWindow(), -1, SDL_RENDERER_ACCELERATED);
@@ -9,11 +9,13 @@ GameRender::GameRender(GameWindow &window)
     }
 }
 
+//-----------------------------------------------------------------------------
 GameRender::~GameRender()
 {
     SDL_DestroyRenderer(renderer);
 }
 
+//-----------------------------------------------------------------------------
 SDL_Renderer *GameRender::getRender() const
 {
     return renderer;

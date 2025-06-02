@@ -7,8 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 include(FetchContent)
 Set(FETCHCONTENT_QUIET FALSE)
-set(BOOST_INCLUDE_LIBRARIES program_options)
-set(BOOST_ENABLE_CMAKE ON)
+
 # Конечно лучше conan или vcpkg, но не у всех стоят а это встроенная cmake
 FetchContent_Declare(
         SDL2
@@ -19,12 +18,12 @@ FetchContent_Declare(
 )
 
 FetchContent_Declare(
-    Boost
-    GIT_REPOSITORY https://github.com/boostorg/boost.git
-    GIT_TAG boost-1.80.0
+    cxxopts
+    GIT_REPOSITORY https://github.com/jarro2783/cxxopts
+    GIT_TAG        master
 )
 
-FetchContent_MakeAvailable(SDL2 Boost)
+FetchContent_MakeAvailable(SDL2 cxxopts)
 
 set(SOURCE_HEADERS
     application.h
@@ -46,4 +45,12 @@ set(SOURCE_SOURCES
 
 add_executable(${PROJECT_NAME} ${SOURCE_HEADERS} ${SOURCE_SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} SDL2::SDL2main SDL2::SDL2-static Boost::program_options)
+target_link_libraries(${PROJECT_NAME} SDL2::SDL2main SDL2::SDL2-static cxxopts)
+
+add_custom_command(
+  TARGET ${PROJECT_NAME} POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    $<TARGET_FILE:SDL2>
+    $<TARGET_FILE_DIR:${PROJECT_NAME}>
+    VERBATIM
+)
